@@ -1,14 +1,9 @@
 import { galleryItems } from "./gallery-items.js";
 // Change code below this line
 const galleryElement = document.querySelector(".gallery");
-const addGalleryMarkup = createListMarkup(galleryItems);
-galleryElement.innerHTML = addGalleryMarkup;
 
-function createListMarkup(galleryItems) {
-  return galleryItems
-    .map(
-      ({ preview, original, description }) =>
-        `<li class="gallery__item">
+function createGalleryCard({ preview, original, description }) {
+  return `<li class="gallery__item">
   <a class="gallery__link" href="${original}">
     <img
       class="gallery__image"
@@ -17,20 +12,26 @@ function createListMarkup(galleryItems) {
       alt="${description}"
     />
   </a>
-</li>`
-    )
-    .join("");
+</li>`;
 }
 
-galleryElement.addEventListener("click", onImgClick);
+function createListMarkup(Items) {
+  return (galleryElement.innerHTML = Items.map((item) =>
+    createGalleryCard(item)
+  ).join(""));
+}
 
 function onImgClick(event) {
   event.preventDefault();
   if (!event.target.classList.contains("gallery__image")) {
     return;
   }
+  createLigthBoxView(event.target.dataset.source);
+}
+
+function createLigthBoxView(imageUrl) {
   const instance = basicLightbox.create(`
-    <img src="${event.target.dataset.source}" width="800" height="600">
+    <img src="${imageUrl}" width="800" height="600">
 `);
 
   instance.show();
@@ -41,5 +42,8 @@ function onImgClick(event) {
     }
   });
 }
+
+createListMarkup(galleryItems);
+galleryElement.addEventListener("click", onImgClick);
 
 // console.log(galleryItems);

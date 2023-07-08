@@ -15,10 +15,10 @@ function createGalleryCard({ preview, original, description }) {
 </li>`;
 }
 
-function createListMarkup(Items) {
-  return (galleryElement.innerHTML = Items.map((item) =>
-    createGalleryCard(item)
-  ).join(""));
+function createListMarkup(items) {
+  return (galleryElement.innerHTML = items
+    .map((item) => createGalleryCard(item))
+    .join(""));
 }
 
 function onImgClick(event) {
@@ -30,17 +30,29 @@ function onImgClick(event) {
 }
 
 function createLigthBoxView(imageUrl) {
-  const instance = basicLightbox.create(`
-    <img src="${imageUrl}" width="800" height="600">
-`);
-
-  instance.show();
-
-  galleryElement.addEventListener("keydown", (event) => {
+  const onKeyDown = (event) => {
     if (event.code === "Escape") {
       instance.close();
     }
-  });
+    console.log(event.key);
+  };
+
+  const instance = basicLightbox.create(
+    `
+    <img src="${imageUrl}" width="800" height="600">
+`,
+    {
+      onShow: (instance) => {
+        window.addEventListener("keydown", onKeyDown);
+        document.body.classList.add("no-scroll");
+      },
+      onClose: (instance) => {
+        window.removeEventListener("keydown", onKeyDown);
+        document.body.classList.remove("no-scroll");
+      },
+    }
+  );
+  instance.show();
 }
 
 createListMarkup(galleryItems);

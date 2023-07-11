@@ -15,8 +15,8 @@ function createGalleryCard({ preview, original, description }) {
 </li>`;
 }
 
-function createListMarkup(Items) {
-  return (galleryElement.innerHTML = Items.map((item) =>
+function createListMarkup(items) {
+  return (galleryElement.innerHTML = items.map((item) =>
     createGalleryCard(item)
   ).join(""));
 }
